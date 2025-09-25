@@ -55,186 +55,152 @@
         <!-- Градиент для имитации воды -->
         <LinearGradientBrush x:Key="WaterBrush" StartPoint="0,0" EndPoint="0,1">
             <GradientStop Color="#AA3498DB" Offset="0"/>
-            <!-- Полупрозрачный синий -->
             <GradientStop Color="#882980B9" Offset="1"/>
-            <!-- Более темный полупрозрачный синий -->
+        </LinearGradientBrush>
+
+        <!-- Градиент для имитации бутылки -->
+        <LinearGradientBrush x:Key="BottleBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#AAFFFFFF" Offset="0"/>
+            <GradientStop Color="#88FFFFFF" Offset="0.5"/>
+            <GradientStop Color="#66FFFFFF" Offset="1"/>
         </LinearGradientBrush>
     </Window.Resources>
 
     <!-- Основной Grid для всех элементов -->
     <Grid>
-        <!-- Определение строк основного Grid -->
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <!-- Заголовок -->
-            <RowDefinition Height="Auto"/>
-            <!-- Кнопки выбора режима -->
-            <RowDefinition Height="Auto"/>
-            <!-- Выбор пола и веса -->
-            <RowDefinition Height="Auto"/>
-            <!-- Количество воды -->
-            <RowDefinition Height="*"/>
-            <!-- Бутылка и Frame -->
-        </Grid.RowDefinitions>
-
         <!-- Заголовок приложения -->
         <Label Content="ЛитроМетр" 
-               Grid.Row="0"
                HorizontalAlignment="Center" 
                VerticalAlignment="Top" 
                Margin="0,30,0,0" 
                FontSize="50"/>
 
-        <!-- Кнопки выбора режима -->
-        <Grid Grid.Row="1" Margin="0,30,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <!-- Кнопки выбора режима - фиксированное положение -->
+        <Button x:Name="IndividualButton"
+                Content="Индивидуальное питьё" 
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="204,126,0,0"
+                Height="58" 
+                Width="274" 
+                Click="IndividualButton_Click"/>
 
-            <Button Content="Индивидуальное питьё" 
-                    Grid.Column="1"
-                    Width="250" 
-                    Height="60" 
-                    Click="IndividualButton_Click"/>
-            <Button Content="Групповое питьё" 
-                    Grid.Column="2"
-                    Margin="20,0,0,0"
-                    Width="250" 
-                    Height="60" 
-                    Click="GroupButton_Click"/>
-        </Grid>
+        <Button x:Name="GroupButton"
+                Content="Групповое питьё" 
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="758,126,0,0"
+                Height="58" 
+                Width="274" 
+                Click="GroupButton_Click"/>
 
-        <!-- Панель выбора пола и веса -->
-        <Grid Grid.Row="2" Margin="0,20,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <!-- Контент для индивидуального режима -->
+        <Grid x:Name="IndividualContent" Visibility="Visible">
+            <!-- Панель выбора пола и веса -->
+            <Grid Margin="0,200,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Панель выбора пола -->
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                <!-- Панель выбора пола -->
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <!-- Текст "Пол" по центру над кнопками -->
-                <Label Content="Пол" 
-                       FontSize="30" 
-                       Grid.Row="0"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,10"/>
+                    <Label Content="Пол" 
+                           FontSize="30" 
+                           Grid.Row="0"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,10"/>
 
-                <Grid Grid.Row="1" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="1" 
+                                Orientation="Horizontal" 
+                                HorizontalAlignment="Center">
+                        <Button Content="Мужчина" 
+                                Width="150" 
+                                Height="40" 
+                                Click="MaleButton_Click"/>
+                        <Button Content="Женщина" 
+                                Margin="20,0,0,0"
+                                Width="150" 
+                                Height="40" 
+                                Click="FemaleButton_Click"/>
+                    </StackPanel>
+                </Grid>
 
-                    <Button Content="Мужчина" 
-                            Grid.Column="0"
-                            Width="150" 
-                            Height="40" 
-                            Click="MaleButton_Click"/>
-                    <Button Content="Женщина" 
-                            Grid.Column="1"
-                            Margin="20,0,0,0"
-                            Width="150" 
-                            Height="40" 
-                            Click="FemaleButton_Click"/>
+                <!-- Панель выбора веса -->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Вес" 
+                           FontSize="30" 
+                           Grid.Row="0"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,10"/>
+
+                    <Slider x:Name="mySlider"
+                            Grid.Row="1"
+                            Style="{StaticResource CustomSliderStyle}"
+                            Minimum="40"
+                            Maximum="120"
+                            Value="70"
+                            Width="300"
+                            HorizontalAlignment="Center"
+                            ValueChanged="mySlider_ValueChanged"/>
+
+                    <TextBlock Text="{Binding ElementName=mySlider, Path=Value, StringFormat={}{0:F0} кг}" 
+                               Grid.Row="2"
+                               FontSize="20" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,10,0,0"/>
                 </Grid>
             </Grid>
 
-            <!-- Панель выбора веса -->
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <!-- Текст "Вес" по центру над слайдером -->
-                <Label Content="Вес" 
-                       FontSize="30" 
-                       Grid.Row="0"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,10"/>
-
-                <Slider x:Name="mySlider"
-                        Grid.Row="1"
-                        Style="{StaticResource CustomSliderStyle}"
-                        Minimum="40"
-                        Maximum="120"
-                        Value="70"
-                        Width="300"
-                        HorizontalAlignment="Center"
-                        ValueChanged="mySlider_ValueChanged"/>
-
-                <TextBlock Text="{Binding ElementName=mySlider, Path=Value, StringFormat={}{0:F0} кг}" 
-                           Grid.Row="2"
-                           FontSize="20" 
-                           HorizontalAlignment="Center" 
-                           Margin="0,10,0,0"/>
-            </Grid>
-        </Grid>
-
-        <!-- Отображение количества воды -->
-        <Label x:Name="WaterAmountLabel" 
-               Grid.Row="3"
-               Content="0 л"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               FontSize="30"
-               FontWeight="Bold"
-               Margin="0,-90,0,0"/>
-
-        <!-- Контейнер для бутылки и Frame -->
-        <Grid Grid.Row="4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <!-- Отображение количества воды -->
+            <Label x:Name="WaterAmountLabel" 
+                   Content="0 л"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="30"
+                   FontWeight="Bold"
+                   Margin="0,-90,0,0"/>
 
             <!-- Визуализация бутылки с водой -->
-            <Grid Grid.Column="1" 
-                  HorizontalAlignment="Center" 
+            <Grid HorizontalAlignment="Center" 
                   VerticalAlignment="Bottom"
                   Margin="0,0,0,50">
-                <!-- Контейнер для бутылки и воды -->
                 <Grid Width="150" Height="300">
-                    <!-- Вода (под бутылкой) -->
                     <Grid x:Name="WaterContainer" 
                           VerticalAlignment="Bottom" 
                           Height="300" 
                           ClipToBounds="True">
-                        <!-- Прямоугольник воды без окантовки -->
                         <Rectangle x:Name="WaterRectangle" 
                                    Fill="{StaticResource WaterBrush}"
                                    VerticalAlignment="Bottom"
-                                   Height="300"
-                                   StrokeThickness="0"/>
-                        <!-- Убираем окантовку -->
+                                   Height="300"/>
                     </Grid>
 
-                    <!-- Изображение бутылки (поверх воды) -->
-                    <Image x:Name="BottleImage"
-                           Source="/Images/bottle.png" 
-                           Stretch="Uniform"
-                           VerticalAlignment="Bottom"
-                           Height="300"/>
+                    <Border x:Name="BottleBorder"
+                            Background="{StaticResource BottleBrush}"
+                            BorderBrush="#DDDDDD" 
+                            BorderThickness="1"
+                            CornerRadius="20,20,40,40"
+                            VerticalAlignment="Bottom"
+                            Height="300"/>
                 </Grid>
             </Grid>
-
-            <!-- Frame для навигации между страницами -->
-            <Frame x:Name="MainFrame" 
-                   Grid.Column="0" 
-                   Grid.ColumnSpan="3"
-                   NavigationUIVisibility="Hidden" 
-                   Margin="20"/>
         </Grid>
+
+        <!-- Контент для группового режима -->
+        <Frame x:Name="MainFrame" 
+               NavigationUIVisibility="Hidden" 
+               Visibility="Collapsed"/>
     </Grid>
 </Window>
