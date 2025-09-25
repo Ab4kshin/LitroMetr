@@ -1,0 +1,240 @@
+﻿<Window x:Class="LitroMetr.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LitroMetr"
+        xmlns:sys="clr-namespace:System;assembly=System"
+        mc:Ignorable="d"
+        Title="ЛитроМетр" Height="720" Width="1280">
+
+    <Window.Resources>
+        <!-- Стиль для кнопок -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#3498DB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="23"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="20">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для Slider -->
+        <Style x:Key="CustomSliderStyle" TargetType="Slider">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid>
+                            <Border Background="#BDC3C7" Height="4" CornerRadius="2" VerticalAlignment="Center"/>
+                            <Track x:Name="PART_Track">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate>
+                                                <Ellipse Fill="#3498DB" Width="20" Height="20"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Градиент для имитации воды -->
+        <LinearGradientBrush x:Key="WaterBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#AA3498DB" Offset="0"/>
+            <!-- Полупрозрачный синий -->
+            <GradientStop Color="#882980B9" Offset="1"/>
+            <!-- Более темный полупрозрачный синий -->
+        </LinearGradientBrush>
+    </Window.Resources>
+
+    <!-- Основной Grid для всех элементов -->
+    <Grid>
+        <!-- Определение строк основного Grid -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Заголовок -->
+            <RowDefinition Height="Auto"/>
+            <!-- Кнопки выбора режима -->
+            <RowDefinition Height="Auto"/>
+            <!-- Выбор пола и веса -->
+            <RowDefinition Height="Auto"/>
+            <!-- Количество воды -->
+            <RowDefinition Height="*"/>
+            <!-- Бутылка и Frame -->
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок приложения -->
+        <Label Content="ЛитроМетр" 
+               Grid.Row="0"
+               HorizontalAlignment="Center" 
+               VerticalAlignment="Top" 
+               Margin="0,30,0,0" 
+               FontSize="50"/>
+
+        <!-- Кнопки выбора режима -->
+        <Grid Grid.Row="1" Margin="0,30,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Content="Индивидуальное питьё" 
+                    Grid.Column="1"
+                    Width="250" 
+                    Height="60" 
+                    Click="IndividualButton_Click"/>
+            <Button Content="Групповое питьё" 
+                    Grid.Column="2"
+                    Margin="20,0,0,0"
+                    Width="250" 
+                    Height="60" 
+                    Click="GroupButton_Click"/>
+        </Grid>
+
+        <!-- Панель выбора пола и веса -->
+        <Grid Grid.Row="2" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Панель выбора пола -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Текст "Пол" по центру над кнопками -->
+                <Label Content="Пол" 
+                       FontSize="30" 
+                       Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10"/>
+
+                <Grid Grid.Row="1" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Content="Мужчина" 
+                            Grid.Column="0"
+                            Width="150" 
+                            Height="40" 
+                            Click="MaleButton_Click"/>
+                    <Button Content="Женщина" 
+                            Grid.Column="1"
+                            Margin="20,0,0,0"
+                            Width="150" 
+                            Height="40" 
+                            Click="FemaleButton_Click"/>
+                </Grid>
+            </Grid>
+
+            <!-- Панель выбора веса -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Текст "Вес" по центру над слайдером -->
+                <Label Content="Вес" 
+                       FontSize="30" 
+                       Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10"/>
+
+                <Slider x:Name="mySlider"
+                        Grid.Row="1"
+                        Style="{StaticResource CustomSliderStyle}"
+                        Minimum="40"
+                        Maximum="120"
+                        Value="70"
+                        Width="300"
+                        HorizontalAlignment="Center"
+                        ValueChanged="mySlider_ValueChanged"/>
+
+                <TextBlock Text="{Binding ElementName=mySlider, Path=Value, StringFormat={}{0:F0} кг}" 
+                           Grid.Row="2"
+                           FontSize="20" 
+                           HorizontalAlignment="Center" 
+                           Margin="0,10,0,0"/>
+            </Grid>
+        </Grid>
+
+        <!-- Отображение количества воды -->
+        <Label x:Name="WaterAmountLabel" 
+               Grid.Row="3"
+               Content="0 л"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               FontSize="30"
+               FontWeight="Bold"
+               Margin="0,-90,0,0"/>
+
+        <!-- Контейнер для бутылки и Frame -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Визуализация бутылки с водой -->
+            <Grid Grid.Column="1" 
+                  HorizontalAlignment="Center" 
+                  VerticalAlignment="Bottom"
+                  Margin="0,0,0,50">
+                <!-- Контейнер для бутылки и воды -->
+                <Grid Width="150" Height="300">
+                    <!-- Вода (под бутылкой) -->
+                    <Grid x:Name="WaterContainer" 
+                          VerticalAlignment="Bottom" 
+                          Height="300" 
+                          ClipToBounds="True">
+                        <!-- Прямоугольник воды без окантовки -->
+                        <Rectangle x:Name="WaterRectangle" 
+                                   Fill="{StaticResource WaterBrush}"
+                                   VerticalAlignment="Bottom"
+                                   Height="300"
+                                   StrokeThickness="0"/>
+                        <!-- Убираем окантовку -->
+                    </Grid>
+
+                    <!-- Изображение бутылки (поверх воды) -->
+                    <Image x:Name="BottleImage"
+                           Source="/Images/bottle.png" 
+                           Stretch="Uniform"
+                           VerticalAlignment="Bottom"
+                           Height="300"/>
+                </Grid>
+            </Grid>
+
+            <!-- Frame для навигации между страницами -->
+            <Frame x:Name="MainFrame" 
+                   Grid.Column="0" 
+                   Grid.ColumnSpan="3"
+                   NavigationUIVisibility="Hidden" 
+                   Margin="20"/>
+        </Grid>
+    </Grid>
+</Window>
