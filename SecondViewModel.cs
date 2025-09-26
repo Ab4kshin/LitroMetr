@@ -6,10 +6,9 @@ namespace LitroMetr
     {
         private int _menCount;
         private int _womenCount;
-        private double _avgMenWeight = 80; // Средний вес мужчины, кг
-        private double _avgWomenWeight = 65; // Средний вес женщины, кг
-        private double _additionalWater = 0; // Дополнительная вода
-        private bool _oschepkovAdded = false; // Флаг добавления Ощепкова
+        private double _avgMenWeight = 80;
+        private double _avgWomenWeight = 65;
+        private bool _oschepkovAdded = false;
 
         public int MenCount
         {
@@ -20,6 +19,7 @@ namespace LitroMetr
                 OnPropertyChanged(nameof(MenCount));
                 OnPropertyChanged(nameof(TotalCount));
                 OnPropertyChanged(nameof(TotalWaterAmountText));
+                OnPropertyChanged(nameof(TotalWaterAmount));
             }
         }
 
@@ -32,27 +32,17 @@ namespace LitroMetr
                 OnPropertyChanged(nameof(WomenCount));
                 OnPropertyChanged(nameof(TotalCount));
                 OnPropertyChanged(nameof(TotalWaterAmountText));
+                OnPropertyChanged(nameof(TotalWaterAmount));
             }
         }
 
-        public double AvgMenWeight
+        public bool OschepkovAdded
         {
-            get { return _avgMenWeight; }
+            get { return _oschepkovAdded; }
             set
             {
-                _avgMenWeight = value;
-                OnPropertyChanged(nameof(AvgMenWeight));
-                OnPropertyChanged(nameof(TotalWaterAmountText));
-            }
-        }
-
-        public double AvgWomenWeight
-        {
-            get { return _avgWomenWeight; }
-            set
-            {
-                _avgWomenWeight = value;
-                OnPropertyChanged(nameof(AvgWomenWeight));
+                _oschepkovAdded = value;
+                OnPropertyChanged(nameof(OschepkovAdded));
                 OnPropertyChanged(nameof(TotalWaterAmountText));
             }
         }
@@ -66,25 +56,32 @@ namespace LitroMetr
         {
             get
             {
-                double menWater = MenCount * AvgMenWeight * 0.035;  // 35 мл на кг для мужчин
-                double womenWater = WomenCount * AvgWomenWeight * 0.031;  // 31 мл на кг для женщин
-                double totalWater = menWater + womenWater + _additionalWater;
-
+                double totalWater = TotalWaterAmount;
                 string waterText = $"{totalWater:F1} л";
                 if (_oschepkovAdded)
                 {
                     waterText += " (+Ощепков)";
                 }
-
                 return waterText;
             }
         }
 
-        public void AddOschepkovWater()
+        public double TotalWaterAmount
         {
-            _additionalWater += 100;
-            _oschepkovAdded = true;
-            OnPropertyChanged(nameof(TotalWaterAmountText));
+            get
+            {
+                double menWater = MenCount * _avgMenWeight * 0.035;
+                double womenWater = WomenCount * _avgWomenWeight * 0.031;
+                double totalWater = menWater + womenWater;
+
+                // Ощепков добавляет фиксированную бутылку, но не влияет на расчет воды
+                return totalWater;
+            }
+        }
+
+        public void ToggleOschepkov()
+        {
+            OschepkovAdded = !OschepkovAdded;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

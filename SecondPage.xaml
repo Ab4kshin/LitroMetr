@@ -53,47 +53,36 @@
     </Page.Resources>
 
     <Grid>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-
+        <!-- Заголовок -->
         <Label Content="ЛитроМетр" HorizontalAlignment="Center" Margin="0,30,0,0" VerticalAlignment="Top" FontSize="50" Height="82" Width="278"/>
+
+        <!-- Кнопки выбора режима -->
         <Button Content="Индивидуальное питьё" HorizontalAlignment="Left" Margin="204,126,0,0" VerticalAlignment="Top" Height="58" Width="274" Click="Individual_Click"/>
         <Button Content="Групповое питьё" HorizontalAlignment="Left" Margin="758,126,0,0" VerticalAlignment="Top" Height="58" Width="274" Click="Group_Click"/>
+
+        <!-- Заголовки -->
         <Label Content="Количество мужчин" HorizontalAlignment="Left" Margin="291,212,0,0" VerticalAlignment="Top" Height="39" Width="196" FontSize="20"/>
         <Label Content="Количество женщин" HorizontalAlignment="Left" Margin="760,212,0,0" VerticalAlignment="Top" Height="39" Width="201" FontSize="20"/>
         <Label Content="Количество человек" HorizontalAlignment="Left" Height="36" Margin="530,214,0,0" VerticalAlignment="Top" Width="201" FontSize="20"/>
 
-        <!-- Слайдер для мужчин -->
+        <!-- Слайдеры -->
         <Slider x:Name="MenSlider" Style="{StaticResource CustomSliderStyle}"
                 HorizontalAlignment="Left" Margin="307,256,0,0" VerticalAlignment="Top" Width="164"
                 ValueChanged="MenSlider_ValueChanged" Minimum="0" Maximum="30"/>
 
-        <!-- Слайдер для женщин -->
         <Slider x:Name="WomenSlider" Style="{StaticResource CustomSliderStyle}"
                 HorizontalAlignment="Left" Margin="780,256,0,0" VerticalAlignment="Top" Width="164"
                 ValueChanged="WomenSlider_ValueChanged" Minimum="0" Maximum="30"/>
 
-        <!-- Поля для отображения количества мужчин -->
+        <!-- Поля отображения -->
         <TextBox Text="{Binding MenCount, StringFormat={}{0:F0} чел}" IsReadOnly="True"
                  HorizontalAlignment="Left" Margin="323,290,0,0" TextWrapping="Wrap" VerticalAlignment="Top"
                  Width="132" Height="34" FontSize="20"/>
 
-        <!-- Поля для отображения количества женщин -->
         <TextBox Text="{Binding WomenCount, StringFormat={}{0:F0} чел}" IsReadOnly="True"
                  HorizontalAlignment="Left" Margin="796,290,0,0" TextWrapping="Wrap" VerticalAlignment="Top"
                  Width="132" Height="34" FontSize="20"/>
 
-        <!-- Поле для отображения общего количества человек -->
         <TextBox Text="{Binding TotalCount, Mode=OneWay, StringFormat={}{0:F0} чел}" IsReadOnly="True"
                  HorizontalAlignment="Left" Margin="576,282,0,0" TextWrapping="Wrap" VerticalAlignment="Top"
                  Width="108" Height="42" FontSize="20"/>
@@ -103,6 +92,25 @@
            HorizontalAlignment="Center" Margin="0,350,0,0" VerticalAlignment="Top"
            FontSize="30" FontWeight="Bold" Height="50" Width="300" TextAlignment="Center"/>
 
+        <!-- Контейнер для обычных бутылок -->
+        <WrapPanel x:Name="NormalBottlesContainer" 
+                   HorizontalAlignment="Center"
+                   Margin="0,420,0,0"
+                   Height="120"/>
+
+        <!-- Контейнер для бутылки Ощепкова -->
+        <WrapPanel x:Name="OschepkovContainer" 
+                   HorizontalAlignment="Center"
+                   Margin="0,550,0,0"
+                   Height="150"/>
+
+        <!-- Отладочная информация -->
+        <TextBlock x:Name="DebugInfoTextBlock"
+                   HorizontalAlignment="Left"
+                   Margin="10,620,0,0"
+                   VerticalAlignment="Top"
+                   FontSize="12"
+                   Foreground="Gray"/>
 
     </Grid>
 </Page>
