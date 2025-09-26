@@ -10,14 +10,22 @@
 
   <ItemGroup>
     <None Remove="Images\big_bottle.jpg" />
+    <None Remove="Images\bottle.png" />
     <None Remove="Images\bottle_oshepkov.png" />
+    <None Remove="Images\water.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Images\big_bottle.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\bottle.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\bottle_oshepkov.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\water.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -102,8 +102,11 @@ namespace LitroMetr
             NormalBottlesContainer.Children.Clear();
             OschepkovContainer.Children.Clear();
 
-            // Добавляем обычные бутылки (1 бутылка = 5 литров)
-            int numberOfBottles = (int)ViewModel.TotalWaterAmount / 5;
+            // Рассчитываем воду без учета бутылки Ощепкова
+            double waterWithoutOschepkov = ViewModel.TotalWaterAmount - (ViewModel.OschepkovAdded ? 100 : 0);
+
+            // Добавляем обычные бутылки (1 бутылка = 5 литров) только для воды без Ощепкова
+            int numberOfBottles = (int)waterWithoutOschepkov / 5;
 
             for (int i = 0; i < numberOfBottles; i++)
             {
@@ -131,14 +134,19 @@ namespace LitroMetr
             }
 
             // Обновляем текстовую информацию
-            DebugInfoTextBlock.Text = $"Всего воды: {ViewModel.TotalWaterAmount:F1} л, Бутылок: {numberOfBottles} (по 5л каждая)";
-        }
+            string bottleInfo = ViewModel.OschepkovAdded ?
+                $"{numberOfBottles} (по 5л каждая) + 1 бутылка Ощепкова" :
+                $"{numberOfBottles} (по 5л каждая)";
 
+            DebugInfoTextBlock.Text = $"Всего воды: {ViewModel.TotalWaterAmount:F1} л, Бутылок: {bottleInfo}";
+        }
         private void SecondPage_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
             {
                 ViewModel.ToggleOschepkov();
+                // Явно вызываем обновление отображения
+                UpdateBottlesDisplay();
                 e.Handled = true;
             }
         }
