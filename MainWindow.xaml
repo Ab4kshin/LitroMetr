@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LitroMetr"
-        xmlns:sys="clr-namespace:System;assembly=System"
         mc:Ignorable="d"
         Title="ЛитроМетр" Height="720" Width="1280">
 
@@ -51,19 +50,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- Градиент для имитации воды -->
-        <LinearGradientBrush x:Key="WaterBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#AA3498DB" Offset="0"/>
-            <GradientStop Color="#882980B9" Offset="1"/>
-        </LinearGradientBrush>
-
-        <!-- Градиент для имитации бутылки -->
-        <LinearGradientBrush x:Key="BottleBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#AAFFFFFF" Offset="0"/>
-            <GradientStop Color="#88FFFFFF" Offset="0.5"/>
-            <GradientStop Color="#66FFFFFF" Offset="1"/>
-        </LinearGradientBrush>
     </Window.Resources>
 
     <!-- Основной Grid для всех элементов -->
@@ -75,7 +61,7 @@
                Margin="0,30,0,0" 
                FontSize="50"/>
 
-        <!-- Кнопки выбора режима - фиксированное положение -->
+        <!-- Кнопки выбора режима -->
         <Button x:Name="IndividualButton"
                 Content="Индивидуальное питьё" 
                 HorizontalAlignment="Left"
@@ -163,38 +149,57 @@
                 </Grid>
             </Grid>
 
-            <!-- Отображение количества воды -->
-            <Label x:Name="WaterAmountLabel" 
-                   Content="0 л"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="30"
-                   FontWeight="Bold"
-                   Margin="0,-90,0,0"/>
-
-            <!-- Визуализация бутылки с водой -->
+            <!-- Контейнер для бутылки и текста -->
             <Grid HorizontalAlignment="Center" 
                   VerticalAlignment="Bottom"
-                  Margin="0,0,0,50">
-                <Grid Width="150" Height="300">
+                  Margin="0,0,0,30"
+                  Height="400">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Визуализация бутылки с водой -->
+                <Grid Grid.Column="0"
+                      Width="200" 
+                      Height="400"
+                      Margin="0,0,40,0">
+
+                    <!-- Контейнер для воды с обрезкой -->
                     <Grid x:Name="WaterContainer" 
                           VerticalAlignment="Bottom" 
-                          Height="300" 
-                          ClipToBounds="True">
-                        <Rectangle x:Name="WaterRectangle" 
-                                   Fill="{StaticResource WaterBrush}"
-                                   VerticalAlignment="Bottom"
-                                   Height="300"/>
+                          Height="0"
+                          Width="120"
+                          ClipToBounds="True"
+                          HorizontalAlignment="Center">
+
+                        <!-- Изображение воды -->
+                        <Image x:Name="WaterImage"
+                               Source="Images/water.jpg"
+                               VerticalAlignment="Bottom"
+                               Height="400"
+                               Width="105"
+                               Stretch="Fill"/>
                     </Grid>
 
-                    <Border x:Name="BottleBorder"
-                            Background="{StaticResource BottleBrush}"
-                            BorderBrush="#DDDDDD" 
-                            BorderThickness="1"
-                            CornerRadius="20,20,40,40"
-                            VerticalAlignment="Bottom"
-                            Height="300"/>
+                    <!-- Изображение бутылки (поверх воды) -->
+                    <Image x:Name="BottleImage"
+                           Source="Images/bottle.png"
+                           VerticalAlignment="Bottom"
+                           Height="400"
+                           Width="200"
+                           Stretch="Uniform"/>
                 </Grid>
+
+                <!-- Отображение количества воды (справа от бутылки) -->
+                <Label x:Name="WaterAmountLabel" 
+                       Grid.Column="1"
+                       Content="0 л"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontSize="40"
+                       FontWeight="Bold"
+                       Margin="0,0,0,0"/>
             </Grid>
         </Grid>
 

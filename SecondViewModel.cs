@@ -41,9 +41,13 @@ namespace LitroMetr
             get { return _oschepkovAdded; }
             set
             {
-                _oschepkovAdded = value;
-                OnPropertyChanged(nameof(OschepkovAdded));
-                OnPropertyChanged(nameof(TotalWaterAmountText));
+                if (_oschepkovAdded != value)
+                {
+                    _oschepkovAdded = value;
+                    OnPropertyChanged(nameof(OschepkovAdded));
+                    OnPropertyChanged(nameof(TotalWaterAmountText));
+                    OnPropertyChanged(nameof(TotalWaterAmount));
+                }
             }
         }
 
@@ -74,7 +78,12 @@ namespace LitroMetr
                 double womenWater = WomenCount * _avgWomenWeight * 0.031;
                 double totalWater = menWater + womenWater;
 
-                // Ощепков добавляет фиксированную бутылку, но не влияет на расчет воды
+                // Добавляем 100 литров если активирована бутылка Ощепкова
+                if (_oschepkovAdded)
+                {
+                    totalWater += 100;
+                }
+
                 return totalWater;
             }
         }

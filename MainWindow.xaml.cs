@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 
 namespace LitroMetr
 {
@@ -9,24 +11,47 @@ namespace LitroMetr
     {
         private string selectedGender = "Мужчина";
         private double weight = 70;
+        private double currentWaterHeight = 0;
+        private bool isAnimating = false;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            // Загружаем изображения
+            LoadImages();
             UpdateWaterAmount();
+        }
+
+        private void LoadImages()
+        {
+            try
+            {
+                // Загружаем изображение воды
+                Uri waterUri = new Uri("Images/water.jpg", UriKind.Relative);
+                WaterImage.Source = new BitmapImage(waterUri);
+
+                // Загружаем изображение бутылки
+                Uri bottleUri = new Uri("Images/bottle.png", UriKind.Relative);
+                BottleImage.Source = new BitmapImage(bottleUri);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки изображений: {ex.Message}", "Ошибка");
+            }
         }
 
         private void GroupButton_Click(object sender, RoutedEventArgs e)
         {
-            // Переход на страницу группового питья
+            IndividualContent.Visibility = Visibility.Collapsed;
             MainFrame.Visibility = Visibility.Visible;
             MainFrame.Navigate(new SecondPage());
         }
 
         private void IndividualButton_Click(object sender, RoutedEventArgs e)
         {
-            // Логика для кнопки "Индивидуальное питьё"
-            MainFrame.Visibility = Visibility.Hidden;
+            IndividualContent.Visibility = Visibility.Visible;
+            MainFrame.Visibility = Visibility.Collapsed;
             MainFrame.Navigate(null);
         }
 
@@ -57,8 +82,6 @@ namespace LitroMetr
             if (WaterAmountLabel != null)
             {
                 WaterAmountLabel.Content = $"{waterAmount:F1} л";
-
-                // Обновляем уровень воды в бутылке
                 UpdateWaterLevel(waterAmount);
             }
         }
@@ -71,23 +94,60 @@ namespace LitroMetr
 
         private void UpdateWaterLevel(double waterAmount)
         {
-            // Максимальное количество воды (для веса 120 кг и пола мужской: 120 * 0.035 = 4.2 л)
+            // Максимальное количество воды
             double maxWater = 4.2;
-
-            // Рассчитываем пропорцию (от 0 до 1)
             double proportion = waterAmount / maxWater;
-
-            // Ограничиваем значение от 0 до 1
             proportion = Math.Max(0, Math.Min(1, proportion));
 
-            // Устанавливаем высоту контейнера воды
-            if (WaterContainer != null)
+            // Новая высота воды
+            double targetHeight = proportion * 400;
+
+            // Устанавливаем высоту без анимации для мгновенного отклика
+            WaterContainer.Height = targetHeight;
+            currentWaterHeight = targetHeight;
+        }
+
+
+        private void SmoothWaterLevelChange(double targetHeight)
+        {
+            // Если анимация уже выполняется, не запускаем новую
+            if (isAnimating)
+                return;
+
+            // Разница между текущей и целевой высотой
+            double heightDifference = Math.Abs(targetHeight - currentWaterHeight);
+
+            // Если изменение очень маленькое - мгновенно
+            if (heightDifference < 5)
             {
-                // Высота контейнера воды будет пропорциональна количеству воды
-                // При proportion=0 высота=0 (вода не видна)
-                // При proportion=1 высота=300 (вода заполняет всю бутылку)
-                WaterContainer.Height = proportion * 300;
+                WaterContainer.Height = targetHeight;
+                currentWaterHeight = targetHeight;
+                return;
             }
+
+            // Запускаем анимацию
+            isAnimating = true;
+
+            // Длительность анимации зависит от расстояния
+            double durationSeconds = Math.Min(0.8, heightDifference / 400 * 1.5);
+
+            var animation = new DoubleAnimation(
+                targetHeight,
+                TimeSpan.FromSeconds(durationSeconds))
+            {
+                EasingFunction = new QuadraticEase()
+                {
+                    EasingMode = EasingMode.EaseInOut
+                }
+            };
+
+            animation.Completed += (s, e) =>
+            {
+                currentWaterHeight = targetHeight;
+                isAnimating = false;
+            };
+
+            WaterContainer.BeginAnimation(Grid.HeightProperty, animation);
         }
     }
 }
